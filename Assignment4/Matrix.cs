@@ -236,22 +236,86 @@ namespace Assignment4
             Matrix output = new Matrix(m.columns, m.rows);
             if (t == "T" || t =="t")
             {
-                for (int i = 0; i < m1.rows; i++)
+                for (int i = 0; i < m.rows; i++)
                 {
-                    for (int j = 0; j < m2.columns; j++)
+                    for (int j = 0; j < m.columns; j++)
                     {
-                        for (int k = 0; k < m1.rows; k++)
-                        {
-                            output[i, j] += m1[i, k] + m2[k, j];
-                        }
+                        output[j, i] = m[i, j];
                     }
                 }
                 return output;
             }
             else
             {
-                throw new ArgumentException("");
+                throw new ArgumentException("Error");
             }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="m"></param>
+        /// <param name="t"></param>
+        /// <returns></returns>
+        public static Matrix operator ^(Matrix m, int t)
+        {
+            // not done yet 
+            Matrix output = new Matrix(m.columns, m.rows);
+            if (t == -1)
+            {
+                for (int i = 0; i < m.rows; i++)
+                {
+                    for (int j = 0; j < m.columns; j++)
+                    {
+                        output[j, i] = m[i, j];
+                    }
+                }
+                return output;
+            }
+            else
+            {
+                throw new ArgumentException("Error");
+            }
+        }
+
+        /// <summary>
+        /// Retrurns the smallest element from the matrix.
+        /// </summary>
+        /// <returns></returns>
+        public double Min()
+        {
+            double min = this.matrix[1, 1];
+            for (int i = 0; i < this.rows; i++)
+            {
+                for (int j = 0; j < this.columns; j++)
+                {
+                    if (min > this.matrix[i,j])
+                    {
+                        min = matrix[i, j];
+                    }
+                }
+            }
+            return min;
+        }
+
+        /// <summary>
+        /// Returns the largest element of the matrix.
+        /// </summary>
+        /// <returns></returns>
+        public double Max()
+        {
+            double max = this.matrix[1, 1];
+            for (int i = 0; i < this.rows; i++)
+            {
+                for (int j = 0; j < this.columns; j++)
+                {
+                    if (max < this.matrix[i, j])
+                    {
+                        max = matrix[i, j];
+                    }
+                }
+            }
+            return max;
         }
 
         /// <summary>
@@ -269,12 +333,6 @@ namespace Assignment4
                     Console.Write("\n");
                 }
             }
-
-        public void F(params int[] ps)
-            {
-
-            }
-        
     }
 
 }

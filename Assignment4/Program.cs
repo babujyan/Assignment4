@@ -10,6 +10,9 @@ namespace Assignment4
     {
         static void Main(string[] args)
         {
+            string t = "t";
+            string T = "T";
+
             while (true)
             {
                 Matrix a = new Matrix();
@@ -33,6 +36,9 @@ namespace Assignment4
                 {
                     Console.WriteLine("*");
                 }
+                
+                (a ^ t).Print();
+                (a ^ -1).Print();
             }
         }
     }
