@@ -113,7 +113,7 @@ namespace Assignment4
         }
 
         /// <summary>
-        /// Init empaty Matrix
+        /// Init empty Matrix
         /// </summary>
         /// <param name="n">Rows</param>
         /// <param name="m">Columns</param>
@@ -222,6 +222,35 @@ namespace Assignment4
             else
             {
                 throw new ArgumentException(" Column of first matrix not equal to row of second.");
+            }
+        }
+
+        /// <summary>
+        /// Transpose matrix.
+        /// </summary>
+        /// <param name="m"></param>
+        /// <param name="t"></param>
+        /// <returns></returns>
+        public static Matrix operator ^(Matrix m , string t)
+        {
+            Matrix output = new Matrix(m.columns, m.rows);
+            if (t == "T" || t =="t")
+            {
+                for (int i = 0; i < m1.rows; i++)
+                {
+                    for (int j = 0; j < m2.columns; j++)
+                    {
+                        for (int k = 0; k < m1.rows; k++)
+                        {
+                            output[i, j] += m1[i, k] + m2[k, j];
+                        }
+                    }
+                }
+                return output;
+            }
+            else
+            {
+                throw new ArgumentException("");
             }
         }
 
