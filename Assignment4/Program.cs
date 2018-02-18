@@ -10,6 +10,10 @@ namespace Assignment4
     {
         static void Main(string[] args)
         {
+
+            InitMatrix a = new InitMatrix();
+            InitMatrix b = new InitMatrix();
+            (a + b).Print();
         }
     }
 }
