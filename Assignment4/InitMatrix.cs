@@ -124,7 +124,7 @@ namespace Assignment4
                 {
                     Console.Write(matrix[n, m] + "  ");
                 }
-
+                 
                 Console.Write("\n");
             }
         }

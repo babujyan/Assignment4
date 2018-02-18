@@ -10,10 +10,30 @@ namespace Assignment4
     {
         static void Main(string[] args)
         {
+            while (true)
+            {
+                Matrix a = new Matrix();
+                Matrix b = new Matrix();
+                try
+                {
+                    (a + b).Print();
+                }
+                catch
+                {
+                    Console.WriteLine("+");
+                }
+                int q = 5;
+                (q * a).Print();
 
-            InitMatrix a = new InitMatrix();
-            InitMatrix b = new InitMatrix();
-            (a + b).Print();
+                try
+                {
+                    (a * b).Print();
+                }
+                catch
+                {
+                    Console.WriteLine("*");
+                }
+            }
         }
     }
 }
