@@ -21,6 +21,8 @@ namespace Assignment4
         /// </summary>
         int columns { get; set; }
 
+        string userInput;
+
         /// <summary>
         /// Field for matrix
         /// </summary>
@@ -47,7 +49,7 @@ namespace Assignment4
             do
             {
                 Console.Write("Rows : ");
-                string userInput = Console.ReadLine();
+                userInput = Console.ReadLine();
                 input = Int32.TryParse(userInput, out int k);
                 if (input == true)
                 {
@@ -62,7 +64,7 @@ namespace Assignment4
             do
             {
                 Console.Write("columns : ");
-                string userInput = Console.ReadLine();
+                userInput = Console.ReadLine();
                 input = Int32.TryParse(userInput, out int k);
                 if (input == true)
                 {
@@ -76,14 +78,29 @@ namespace Assignment4
             Console.WriteLine("\n" + "rows : " + rows + "\n" + "columns : " + columns + "\n");
 
             this.matrix = new double[columns, rows];
+            
+            do
+            {
+                Console.Write("randomly or by user ? ");
+                userInput = Console.ReadLine();
+                if (userInput != "randomly" || userInput != "by user")
+                {
+                    Console.WriteLine("wrong inpt");
+                }
+                else input = true;
 
-            for (int n = 0; n < rows; n++)
-                for (int m = 0; m < columns; m++)
+            } while (input == false);
+
+            if (userInput == "by user")
+            {
+                for (int n = 0; n < rows; n++)
+                {
+                    for (int m = 0; m < columns; m++)
                     {
                         do
                         {
                             Console.Write((n + 1) + "," + (m + 1) + " = ");
-                            string userInput = Console.ReadLine();
+                            userInput = Console.ReadLine();
                             input = Double.TryParse(userInput, out double a);
                             if (input == true)
                             {
@@ -96,7 +113,19 @@ namespace Assignment4
                             }
                         } while (input == false);
                     }
-
+                }
+            }
+            else
+            {
+                Random random = new Random();
+                for (int n = 0; n < columns; n++)
+                {
+                    for (int m = 0; m < rows; m++)
+                    {
+                        matrix[n, m] = random.Next();
+                    }
+                }
+            }
 
             Console.Write("\n");
             for (int n = 0; n < columns; n++)
@@ -204,16 +233,16 @@ namespace Assignment4
         /// <returns></returns>
         public static Matrix operator *(Matrix m1, Matrix m2)
         {
-            Matrix output = new Matrix(m1.columns, m1.rows);
+            Matrix output = new Matrix(m2.columns, m1.rows);
             if (m1.columns == m2.rows)
             {
                 for (int i = 0; i < m1.rows; i++)
                 {
                     for (int j = 0; j < m2.columns; j++)
                     {
-                        for(int k = 0; k < m1.rows; k++)
+                        for(int k = 0; k < m2.rows; k++)
                         {
-                            output[i, j] += m1[i, k] + m2[k, j];
+                            output[j, i] += m1[k,i] * m2[j,k];
                         }
                     }
                 }
@@ -333,7 +362,91 @@ namespace Assignment4
                     Console.Write("\n");
                 }
             }
+
+        public Matrix Inverse()
+        {
+            if (this.rows == this.columns)
+            {
+                int rows = this.rows;
+                int columns = this.columns;
+                Matrix temporary = new Matrix(columns , rows);
+                Matrix matrix = new Matrix(columns, rows);
+
+                for (int i = 0; i < columns; i++)
+                {
+                    for (int j = 0; j < rows; j++)
+                    {
+                        matrix[i, j] = this.matrix[i, j];
+                    }
+                }
+                for (int i = 0; i < rows; i++)
+                {
+                    for (int j = 0; j < columns; j++)
+                    {
+                        if (i == j)
+                        {
+                            temporary[i, j] = 1;
+                        }
+                        else
+                        {
+                            temporary[i, j] = 0;
+                        }
+                    }
+                }
+
+                for (int i = 0; i < rows; i++)
+                {
+                    if (this.matrix[i, i] != 0)
+                    {
+                        for (int j = 0; j < columns; j++)
+                        {
+                            temporary[i, j] = temporary[i, j] / matrix[i, i];
+                            matrix[i, j] = matrix[i, j] / matrix[i, i];
+                        }
+                        for (int k = 0; k < rows; k++)
+                        {
+                            if (k != i && matrix[k, i] != 0)
+                            {
+                                for (int j = i; j < columns; j++)
+                                {
+                                    temporary[k, j] -= matrix[k, i] * temporary[i, j];
+                                    matrix[k, j] -= matrix[k, i] * matrix[i, j];
+
+                                }
+                            }
+                        }
+                    }
+                }
+
+                return temporary;
+            }
+            else
+                throw new Exception();
+
+        }
+
+        public bool IsOrtogonal()
+        {
+            Matrix matrix = this * (this ^ "t");
+
+            for (int i = 0; i < this.rows; i++)
+            {
+                for (int j = 0; j < this.columns; j++)
+                {
+                    if (i == j)
+                    {
+                        if(matrix[i , j] != 1 )
+                        {
+                            return false;
+                        }
+                    }
+                    else if(matrix[i, j] != 0)
+                    {
+                        return false;
+                    }
+                }
+            }
+            return true;
+        }
     }
-
 }
-

@@ -16,29 +16,30 @@ namespace Assignment4
             while (true)
             {
                 Matrix a = new Matrix();
-                Matrix b = new Matrix();
-                try
-                {
-                    (a + b).Print();
-                }
-                catch
-                {
-                    Console.WriteLine("+");
-                }
-                int q = 5;
-                (q * a).Print();
+                //Matrix b = new Matrix();
+                (a * a.Inverse()).Print();
+                //try
+                //{
+                //    (a + b).Print();
+                //}
+                //catch
+                //{
+                //    Console.WriteLine("+");
+                //}
+                //int q = 5;
+                //(q * a).Print();
 
-                try
-                {
-                    (a * b).Print();
-                }
-                catch
-                {
-                    Console.WriteLine("*");
-                }
+                //try
+                //{
+                //    (a * b).Print();
+                //}
+                //catch
+                //{
+                //    Console.WriteLine("*");
+                //}
                 
-                (a ^ t).Print();
-                (a ^ -1).Print();
+                //(a ^ t).Print();
+                //(a ^ -1).Print();
             }
         }
     }
