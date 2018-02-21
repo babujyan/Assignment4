@@ -29,15 +29,15 @@ namespace Assignment4
         private double[,] matrix;
 
         /// <summary>
-        /// Propertes for matrix
+        /// The indexer method.
         /// </summary>
         /// <param name="i">Rows</param>
         /// <param name="j">Columns</param>
         /// <returns></returns>
         public double this[int i, int j]
             {
-                get { return matrix[i, j]; }
-                private set { matrix[i, j] = value; }
+                get { return this.matrix[i, j]; }
+                private set { this.matrix[i, j] = value; }
             }
 
         /// <summary>
@@ -78,15 +78,17 @@ namespace Assignment4
             Console.WriteLine("\n" + "rows : " + rows + "\n" + "columns : " + columns + "\n");
 
             this.matrix = new double[columns, rows];
-            
+            input = false;
             do
             {
                 Console.Write("randomly or by user ? ");
                 userInput = Console.ReadLine();
-                if (userInput != "randomly" || userInput != "by user")
+
+                if (userInput != "randomly" && userInput != "by user")
                 {
                     Console.WriteLine("wrong inpt");
                 }
+
                 else input = true;
 
             } while (input == false);
@@ -104,7 +106,7 @@ namespace Assignment4
                             input = Double.TryParse(userInput, out double a);
                             if (input == true)
                             {
-                                this.matrix[n, m] = a;//Double.Parse(userInput);
+                                this.matrix[n, m] = Double.Parse(userInput);
                             }
                             else
                             {
@@ -363,6 +365,25 @@ namespace Assignment4
                 }
             }
 
+        public Matrix Copy()
+        {
+            Matrix matrix = new Matrix(this.columns, this.rows);
+
+            for (int i = 0; i < columns; i++)
+            {
+                for (int j = 0; j < rows; j++)
+                {
+                    matrix[i, j] = this.matrix[i, j];
+                }
+            }
+
+            return matrix;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public Matrix Inverse()
         {
             if (this.rows == this.columns)
@@ -370,15 +391,9 @@ namespace Assignment4
                 int rows = this.rows;
                 int columns = this.columns;
                 Matrix temporary = new Matrix(columns , rows);
-                Matrix matrix = new Matrix(columns, rows);
 
-                for (int i = 0; i < columns; i++)
-                {
-                    for (int j = 0; j < rows; j++)
-                    {
-                        matrix[i, j] = this.matrix[i, j];
-                    }
-                }
+                Matrix matrix = this.Copy();
+
                 for (int i = 0; i < rows; i++)
                 {
                     for (int j = 0; j < columns; j++)
@@ -392,6 +407,24 @@ namespace Assignment4
                             temporary[i, j] = 0;
                         }
                     }
+                }
+
+                for (int i = 0; i < rows; i++)
+
+                {                    
+                    for (int k = 0; k < columns; k++)
+                    {
+                        if (matrix[i, k] == 0)
+                        {
+                            break;
+                        }
+                    }
+                    
+                    else
+                    {
+                        throw new ArgumentException("Error");
+                    }
+
                 }
 
                 for (int i = 0; i < rows; i++)
@@ -415,6 +448,11 @@ namespace Assignment4
                                 }
                             }
                         }
+                    }
+
+                    {
+                        
+                        i--;
                     }
                 }
 
