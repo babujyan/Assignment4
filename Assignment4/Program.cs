@@ -10,14 +10,14 @@ namespace Assignment4
     {
         static void Main(string[] args)
         {
-            string t = "t";
-            string T = "T";
-
             while (true)
             {
                 Matrix a = new Matrix();
+                //a.Print();
                 //Matrix b = new Matrix();
-                (a * a.Inverse()).Print();
+                //(a * a.Inverse()).Print();
+                //double[] b = { 1, 2, 3 };
+                //a.Scale(b).Print();
                 //try
                 //{
                 //    (a + b).Print();

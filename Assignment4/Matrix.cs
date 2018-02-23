@@ -35,11 +35,11 @@ namespace Assignment4
         /// <param name="j">Columns</param>
         /// <returns></returns>
         public double this[int i, int j]
-            {
-                get { return this.matrix[i, j]; }
-                private set { this.matrix[i, j] = value; }
-            }
-
+        {
+            get { return this.matrix[i, j]; }
+            private set { this.matrix[i, j] = value; }
+        }
+        
         /// <summary>
         /// Init matrix
         /// </summary>
@@ -77,7 +77,7 @@ namespace Assignment4
             } while (input == false);
             Console.WriteLine("\n" + "rows : " + rows + "\n" + "columns : " + columns + "\n");
 
-            this.matrix = new double[columns, rows];
+            this.matrix = new double[rows, columns];
             input = false;
             do
             {
@@ -120,27 +120,14 @@ namespace Assignment4
             else
             {
                 Random random = new Random();
-                for (int n = 0; n < columns; n++)
+                for (int n = 0; n < rows; n++)
                 {
-                    for (int m = 0; m < rows; m++)
+                    for (int m = 0; m < columns; m++)
                     {
-                        matrix[n, m] = random.Next();
+                        matrix[n,m] = random.Next();
                     }
                 }
             }
-
-            Console.Write("\n");
-            for (int n = 0; n < columns; n++)
-            {
-                for (int m = 0; m < rows; m++)
-                {
-                    Console.Write(matrix[n, m] + "  ");
-                }
-
-                Console.Write("\n");
-            }
-
-
         }
 
         /// <summary>
@@ -148,11 +135,11 @@ namespace Assignment4
         /// </summary>
         /// <param name="n">Rows</param>
         /// <param name="m">Columns</param>
-        private Matrix(int n, int m)
+        private Matrix(int rows, int columns)
         {
-            this.columns = n;
-            this.rows = m;
-            this.matrix = new double[columns, rows];
+            this.columns = columns;
+            this.rows = rows;
+            this.matrix = new double[this.rows , this.columns];
         }
 
         /// <summary>
@@ -163,12 +150,13 @@ namespace Assignment4
         /// <returns></returns>
         public static Matrix operator +(Matrix m1, Matrix m2)
         {
-            Matrix output = new Matrix(m1.columns, m1.rows);
+            Matrix output = new Matrix(m1.rows, m1.columns);
+
             if (m1.columns == m2.columns && m1.rows == m2.rows)
             {
-                for (int i = 0; i < m1.columns; i++)
+                for (int i = 0; i < m1.rows; i++)
                 {
-                    for (int j = 0; j < m1.rows; j++)
+                    for (int j = 0; j < m1.columns; j++)
                     {
                         output[i, j] = m1[i, j] + m2[i, j];
                     }
@@ -189,13 +177,13 @@ namespace Assignment4
         /// <returns></returns>
         public static Matrix operator -(Matrix m1, Matrix m2)
         {
-            Matrix output = new Matrix(m1.columns, m1.rows);
+            Matrix output = new Matrix(m1.rows, m1.columns);
 
             if (m1.columns == m2.columns && m1.rows == m2.rows)
             {
-                for (int i = 0; i < m1.columns; i++)
+                for (int i = 0; i < m1.rows; i++)
                 {
-                    for (int j = 0; j < m1.rows; j++)
+                    for (int j = 0; j < m1.columns; j++)
                     {
                         output[i, j] = m1[i, j] - m2[i, j];
                     }
@@ -216,12 +204,12 @@ namespace Assignment4
         /// <returns></returns>
         public static Matrix operator *(double d,  Matrix m)
         {
-            Matrix output = new Matrix(m.columns, m.rows);
+            Matrix output = new Matrix(m.rows , m.columns);
             for (int i = 0; i < m.columns; i++)
                 {
                     for (int j = 0; j < m.rows; j++)
                     {
-                        output[i, j] = d * m[i, j];
+                        output[j,i] = d * m[j,i];
                     }
                 }
             return output;
@@ -235,7 +223,7 @@ namespace Assignment4
         /// <returns></returns>
         public static Matrix operator *(Matrix m1, Matrix m2)
         {
-            Matrix output = new Matrix(m2.columns, m1.rows);
+            Matrix output = new Matrix(m1.rows , m2.columns);
             if (m1.columns == m2.rows)
             {
                 for (int i = 0; i < m1.rows; i++)
@@ -244,7 +232,7 @@ namespace Assignment4
                     {
                         for(int k = 0; k < m2.rows; k++)
                         {
-                            output[j, i] += m1[k,i] * m2[j,k];
+                            output[i, j] += m1[i, k] * m2[k, j];
                         }
                     }
                 }
@@ -264,20 +252,20 @@ namespace Assignment4
         /// <returns></returns>
         public Matrix Transpose()
         {
-            Matrix output = new Matrix(this.columns, this.rows);
+            Matrix output = new Matrix(this.rows , this.columns);
 
             for (int i = 0; i < this.rows; i++)
             {
                 for (int j = 0; j < this.columns; j++)
                 {
-                    output[j, i] = this[i, j];
+                    output[i,j] = this[j,i];
                 }
             }
             return output;
         }
 
         /// <summary>
-        /// Invers matrix
+        /// Invers matrix using Gauss–Jordan elimination.  // fadiyev method 
         /// </summary>
         /// <returns>Inversed matrix</returns>
         public Matrix Inverse()
@@ -286,7 +274,7 @@ namespace Assignment4
             {
                 int rows = this.rows;
                 int columns = this.columns;
-                Matrix temporary = new Matrix(columns, rows);
+                Matrix temporary = new Matrix(rows , this.columns);
 
                 Matrix matrix = this.Copy();
 
@@ -316,15 +304,15 @@ namespace Assignment4
                             {
                                 for (int w = i; w < columns; w++)
                                 {
-                                    double tempr = matrix[w, k];
-                                    matrix[w, k] = matrix[w, i];
-                                    matrix[w, i] = tempr;
+                                    double tempr = matrix[k, w];
+                                    matrix[k, w] = matrix[i, w];
+                                    matrix[i, w] = tempr;
                                 }
                                 for (int w = 0; w < columns; w++)
                                 {
-                                    double tempr = temporary[w, k];
-                                    temporary[w, k] = temporary[w, i];
-                                    temporary[w, i] = tempr;
+                                    double tempr = temporary[k, w];
+                                    temporary[k, w] = temporary[i, w];
+                                    temporary[i, w] = tempr;
                                 }
                                 inversible = true;
                                 break;
@@ -335,11 +323,14 @@ namespace Assignment4
                             throw new Exception("Error");
                         }
                     }
+
+                    double temp = matrix[i, i];
                     for (int j = 0; j < columns; j++)
                     {
-                        temporary[i, j] = temporary[i, j] / matrix[i, i];
-                        matrix[i, j] = matrix[i, j] / matrix[i, i];
+                        temporary[i, j] = temporary[i, j] / temp;
+                        matrix[i, j] = matrix[i, j] / temp;
                     }
+
                     for (int k = 0; k < rows; k++)
                     {
                         if (k != i && matrix[k, i] != 0)
@@ -362,6 +353,79 @@ namespace Assignment4
 
         }
 
+        /// <summary>
+        /// Translat the object
+        /// </summary>
+        /// <param name="ps">Array for Tanslation for n dimantional ojects.</param>
+        /// <returns></returns>
+        public Matrix Translate(params double[] ps)
+        {
+            if(this.rows == ps.Length+1)
+            {
+                Matrix matrix = this.Copy();
+
+                for (int i = 0; i < rows; i++)
+                {
+                    for (int j = 0; j < columns; j++)
+                    {
+                        matrix[i, j] += ps[i];
+                    }
+                }
+                return matrix;
+            }
+            else
+            {
+                throw new Exception("Error");
+            }
+        }
+
+        /// <summary>
+        /// Scale the matrix.
+        /// </summary>
+        /// <param name="s">Scaling factors.</param>
+        /// <returns>Sclaed matrix.</returns>
+        public Matrix Scale(params double[] s )
+        {
+            if (this.rows == s.Length)
+            {
+                Matrix scale = new Matrix(this.rows, this.rows);
+
+                for(int i=0; i < scale.rows; i++)
+                {
+                    scale[i, i] = s[i];
+                }
+
+                Matrix matrix = scale * this;
+                return matrix;
+            }
+            else
+            {
+                throw new Exception("Error");
+            }
+        }
+
+        /// <summary>
+        /// Rotate matrix. Only for 2D
+        /// </summary>
+        /// <param name="angle">Angle of rotation.</param>
+        /// <returns>Rotated matrix.</returns>
+        public Matrix Rotate(double angle)
+        {
+            if (this.rows == this.columns && this.columns == 2)
+            {
+                Matrix r = new Matrix(2, 2);
+                r[0, 0] = Math.Cos(angle);
+                r[0, 1] = -Math.Sin(angle);
+                r[1, 0] = Math.Sin(angle);
+                r[1, 1] = Math.Cos(angle);
+
+                return r * this;
+            }
+            else
+            {
+                throw new Exception("Error");
+            }
+        }
 
         /// <summary>
         /// Retrurns the smallest element from the matrix.
@@ -408,24 +472,28 @@ namespace Assignment4
         /// </summary>
         public void Print()
             {
-                for (int n = 0; n < columns; n++)
+                for (int n = 0; n < rows; n++)
                 {
-                    for (int m = 0; m < rows; m++)
+                    for (int m = 0; m < columns; m++)
                     {
-                        Console.Write(matrix[n, m] + "  ");
+                        Console.Write(matrix[n,m] + "  ");
                     }
 
                     Console.Write("\n");
                 }
             }
 
+        /// <summary>
+        /// Copy the matrix.
+        /// </summary>
+        /// <returns>Copy of the matrix</returns>
         public Matrix Copy()
         {
-            Matrix matrix = new Matrix(this.columns, this.rows);
+            Matrix matrix = new Matrix(this.rows, this.columns);
 
-            for (int i = 0; i < columns; i++)
+            for (int i = 0; i < rows; i++)
             {
-                for (int j = 0; j < rows; j++)
+                for (int j = 0; j < columns; j++)
                 {
                     matrix[i, j] = this.matrix[i, j];
                 }
@@ -434,10 +502,13 @@ namespace Assignment4
             return matrix;
         }
 
-       
+       /// <summary>
+       /// Ceckes is the matrix ortogonal or not.
+       /// </summary>
+       /// <returns>Ortogonal or not.</returns>
         public bool IsOrtogonal()
         {
-            Matrix matrix = this * (this ^ "t");
+            Matrix matrix = this * this.Transpose();
 
             for (int i = 0; i < this.rows; i++)
             {
