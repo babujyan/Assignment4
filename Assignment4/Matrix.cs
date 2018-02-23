@@ -262,52 +262,106 @@ namespace Assignment4
         /// <param name="m"></param>
         /// <param name="t"></param>
         /// <returns></returns>
-        public static Matrix operator ^(Matrix m , string t)
+        public Matrix Transpose()
         {
-            Matrix output = new Matrix(m.columns, m.rows);
-            if (t == "T" || t =="t")
+            Matrix output = new Matrix(this.columns, this.rows);
+
+            for (int i = 0; i < this.rows; i++)
             {
-                for (int i = 0; i < m.rows; i++)
+                for (int j = 0; j < this.columns; j++)
                 {
-                    for (int j = 0; j < m.columns; j++)
-                    {
-                        output[j, i] = m[i, j];
-                    }
+                    output[j, i] = this[i, j];
                 }
-                return output;
             }
-            else
-            {
-                throw new ArgumentException("Error");
-            }
+            return output;
         }
 
         /// <summary>
-        /// 
+        /// Invers matrix
         /// </summary>
-        /// <param name="m"></param>
-        /// <param name="t"></param>
-        /// <returns></returns>
-        public static Matrix operator ^(Matrix m, int t)
+        /// <returns>Inversed matrix</returns>
+        public Matrix Inverse()
         {
-            // not done yet 
-            Matrix output = new Matrix(m.columns, m.rows);
-            if (t == -1)
+            if (this.rows == this.columns)
             {
-                for (int i = 0; i < m.rows; i++)
+                int rows = this.rows;
+                int columns = this.columns;
+                Matrix temporary = new Matrix(columns, rows);
+
+                Matrix matrix = this.Copy();
+
+                for (int i = 0; i < rows; i++)
                 {
-                    for (int j = 0; j < m.columns; j++)
+                    for (int j = 0; j < columns; j++)
                     {
-                        output[j, i] = m[i, j];
+                        if (i == j)
+                        {
+                            temporary[i, j] = 1;
+                        }
+                        else
+                        {
+                            temporary[i, j] = 0;
+                        }
                     }
                 }
-                return output;
+
+                for (int i = 0; i < rows; i++)
+                {
+                    if (matrix[i, i] == 0)
+                    {
+                        bool inversible = false;
+                        for (int k = i + 1; k < rows; k++)
+                        {
+                            if (matrix[k, i] != 0)
+                            {
+                                for (int w = i; w < columns; w++)
+                                {
+                                    double tempr = matrix[w, k];
+                                    matrix[w, k] = matrix[w, i];
+                                    matrix[w, i] = tempr;
+                                }
+                                for (int w = 0; w < columns; w++)
+                                {
+                                    double tempr = temporary[w, k];
+                                    temporary[w, k] = temporary[w, i];
+                                    temporary[w, i] = tempr;
+                                }
+                                inversible = true;
+                                break;
+                            }
+                        }
+                        if (!inversible)
+                        {
+                            throw new Exception("Error");
+                        }
+                    }
+                    for (int j = 0; j < columns; j++)
+                    {
+                        temporary[i, j] = temporary[i, j] / matrix[i, i];
+                        matrix[i, j] = matrix[i, j] / matrix[i, i];
+                    }
+                    for (int k = 0; k < rows; k++)
+                    {
+                        if (k != i && matrix[k, i] != 0)
+                        {
+                            for (int j = i; j < columns; j++)
+                            {
+                                temporary[k, j] -= matrix[k, i] * temporary[i, j];
+                                matrix[k, j] -= matrix[k, i] * matrix[i, j];
+
+                            }
+                        }
+                    }
+                }
+
+            return temporary;
             }
+
             else
-            {
-                throw new ArgumentException("Error");
-            }
+                throw new Exception("Error");
+
         }
+
 
         /// <summary>
         /// Retrurns the smallest element from the matrix.
@@ -380,89 +434,7 @@ namespace Assignment4
             return matrix;
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
-        public Matrix Inverse()
-        {
-            if (this.rows == this.columns)
-            {
-                int rows = this.rows;
-                int columns = this.columns;
-                Matrix temporary = new Matrix(columns , rows);
-
-                Matrix matrix = this.Copy();
-
-                for (int i = 0; i < rows; i++)
-                {
-                    for (int j = 0; j < columns; j++)
-                    {
-                        if (i == j)
-                        {
-                            temporary[i, j] = 1;
-                        }
-                        else
-                        {
-                            temporary[i, j] = 0;
-                        }
-                    }
-                }
-
-                for (int i = 0; i < rows; i++)
-
-                {                    
-                    for (int k = 0; k < columns; k++)
-                    {
-                        if (matrix[i, k] == 0)
-                        {
-                            break;
-                        }
-                    }
-                    
-                    else
-                    {
-                        throw new ArgumentException("Error");
-                    }
-
-                }
-
-                for (int i = 0; i < rows; i++)
-                {
-                    if (this.matrix[i, i] != 0)
-                    {
-                        for (int j = 0; j < columns; j++)
-                        {
-                            temporary[i, j] = temporary[i, j] / matrix[i, i];
-                            matrix[i, j] = matrix[i, j] / matrix[i, i];
-                        }
-                        for (int k = 0; k < rows; k++)
-                        {
-                            if (k != i && matrix[k, i] != 0)
-                            {
-                                for (int j = i; j < columns; j++)
-                                {
-                                    temporary[k, j] -= matrix[k, i] * temporary[i, j];
-                                    matrix[k, j] -= matrix[k, i] * matrix[i, j];
-
-                                }
-                            }
-                        }
-                    }
-
-                    {
-                        
-                        i--;
-                    }
-                }
-
-                return temporary;
-            }
-            else
-                throw new Exception();
-
-        }
-
+       
         public bool IsOrtogonal()
         {
             Matrix matrix = this * (this ^ "t");
