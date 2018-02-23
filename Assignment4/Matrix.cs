@@ -12,7 +12,7 @@ namespace Assignment4
     class Matrix
     {
         /// <summary>
-        /// Numbr of Rows in matrix.
+        /// Number ofRows in matrix.
         /// </summary>
         int rows { get; set; }
 
@@ -21,31 +21,37 @@ namespace Assignment4
         /// </summary>
         int columns { get; set; }
 
+        /// <summary>
+        /// Input data by user.
+        /// </summary>
         string userInput;
 
         /// <summary>
-        /// Field for matrix
+        /// Field for matrix (2D double array)
         /// </summary>
         private double[,] matrix;
 
         /// <summary>
-        /// The indexer method.
+        /// The indexer method for matrix.
         /// </summary>
-        /// <param name="i">Rows</param>
-        /// <param name="j">Columns</param>
+        /// <param name="rows">Rows</param>
+        /// <param name="columns">Columns</param>
         /// <returns></returns>
-        public double this[int i, int j]
+        public double this[int rows, int columns]
         {
-            get { return this.matrix[i, j]; }
-            private set { this.matrix[i, j] = value; }
+            get { return this.matrix[rows, columns]; }
+            private set { this.matrix[rows, columns] = value; }
         }
         
         /// <summary>
-        /// Init matrix
+        /// Init matrix randomly or by user input.
         /// </summary>
         public Matrix()
         {
+            // Does user input in a proper format or not. Init value is false.
             bool input = false;
+            
+            //Input Rows.
             do
             {
                 Console.Write("Rows : ");
@@ -61,6 +67,7 @@ namespace Assignment4
                 }
             } while (input == false);
 
+            //Input Columns.
             do
             {
                 Console.Write("columns : ");
@@ -75,10 +82,16 @@ namespace Assignment4
                     Console.WriteLine("wrong inpt");
                 }
             } while (input == false);
-            Console.WriteLine("\n" + "rows : " + rows + "\n" + "columns : " + columns + "\n");
 
+            //Console.WriteLine("\n" + "rows : " + rows + "\n" + "columns : " + columns + "\n");
+
+            //Init 2D array for Matrix.
             this.matrix = new double[rows, columns];
+
+            // Does user input in a proper format or not. Init value is false.
             input = false;
+
+            //Fill matrix randomly or by user Input.
             do
             {
                 Console.Write("randomly or by user ? ");
@@ -89,10 +102,13 @@ namespace Assignment4
                     Console.WriteLine("wrong inpt");
                 }
 
-                else input = true;
+                //User input is true.
+                else
+                    input = true;
 
             } while (input == false);
 
+            //If matrix should be filled by user.
             if (userInput == "by user")
             {
                 for (int n = 0; n < rows; n++)
@@ -117,6 +133,7 @@ namespace Assignment4
                     }
                 }
             }
+            //Matrix should be filled by user.
             else
             {
                 Random random = new Random();
@@ -133,8 +150,8 @@ namespace Assignment4
         /// <summary>
         /// Init empty Matrix
         /// </summary>
-        /// <param name="n">Rows</param>
-        /// <param name="m">Columns</param>
+        /// <param name="rows">number of rows in matrix.</param>
+        /// <param name="columns">Number of columns in matrix.</param>
         private Matrix(int rows, int columns)
         {
             this.columns = columns;
@@ -165,7 +182,7 @@ namespace Assignment4
             }
             else
             {
-                throw new ArgumentException("Matrixes should be the same size, "+" operator can not be operted");
+                throw new ArgumentException("Matrices should be the same size, + operator can not be operated");
             }
         }
 
@@ -192,7 +209,7 @@ namespace Assignment4
             }
             else
             {
-                throw new ArgumentException("Matrixes should be the same size, " + " operator can not be operted");
+                throw new ArgumentException("Matrixes should be the same size, - operator can not be operted");
             }
         }
 
@@ -240,7 +257,7 @@ namespace Assignment4
             }
             else
             {
-                throw new ArgumentException(" Column of first matrix not equal to row of second.");
+                throw new ArgumentException(" The column of first matrix not equal to the row of second matrix.");
             }
         }
 
@@ -265,7 +282,7 @@ namespace Assignment4
         }
 
         /// <summary>
-        /// Invers matrix using Gauss–Jordan elimination.  // fadiyev method 
+        /// Invers matrix using Gauss–Jordan elimination.  
         /// </summary>
         /// <returns>Inversed matrix</returns>
         public Matrix Inverse()
@@ -320,7 +337,7 @@ namespace Assignment4
                         }
                         if (!inversible)
                         {
-                            throw new Exception("Error");
+                            throw new Exception("Matrix does not have invers");
                         }
                     }
 
@@ -349,18 +366,19 @@ namespace Assignment4
             }
 
             else
-                throw new Exception("Error");
+                throw new Exception("Matrix should be square (rows = coulms)");
 
         }
 
         /// <summary>
-        /// Translat the object
+        /// Translat the object.
         /// </summary>
-        /// <param name="ps">Array for Tanslation for n dimantional ojects.</param>
-        /// <returns></returns>
+        /// <param name="ps">Array for Tanslation n dimantional ojects.</param>
+        /// <returns>Translated matrix.</returns>
         public Matrix Translate(params double[] ps)
         {
-            if(this.rows == ps.Length+1)
+
+            if(this.rows == ps.Length)
             {
                 Matrix matrix = this.Copy();
 
@@ -375,7 +393,7 @@ namespace Assignment4
             }
             else
             {
-                throw new Exception("Error");
+                throw new Exception("You can not trnslate matrix with these parametrs.");
             }
         }
 
@@ -400,7 +418,7 @@ namespace Assignment4
             }
             else
             {
-                throw new Exception("Error");
+                throw new Exception("You can not scale this matrix with these factors");
             }
         }
 
@@ -423,17 +441,18 @@ namespace Assignment4
             }
             else
             {
-                throw new Exception("Error");
+                throw new Exception("You should use only 2D matrices(rows=2)");
             }
         }
 
         /// <summary>
-        /// Retrurns the smallest element from the matrix.
+        /// Finds the smallest element from the matrix.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>Smallest element from the matrix.</returns>
         public double Min()
         {
             double min = this.matrix[1, 1];
+
             for (int i = 0; i < this.rows; i++)
             {
                 for (int j = 0; j < this.columns; j++)
@@ -444,13 +463,14 @@ namespace Assignment4
                     }
                 }
             }
+
             return min;
         }
 
         /// <summary>
-        /// Returns the largest element of the matrix.
+        /// Finds the largest element of the matrix.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>Largest element of the matrix.</returns>
         public double Max()
         {
             double max = this.matrix[1, 1];

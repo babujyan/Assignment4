@@ -13,6 +13,7 @@ namespace Assignment4
             while (true)
             {
                 Matrix a = new Matrix();
+                
                 //a.Print();
                 //Matrix b = new Matrix();
                 //(a * a.Inverse()).Print();
