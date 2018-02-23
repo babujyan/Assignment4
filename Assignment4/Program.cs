@@ -39,8 +39,7 @@ namespace Assignment4
                 //    Console.WriteLine("*");
                 //}
                 
-                //(a ^ t).Print();
-                //(a ^ -1).Print();
+                
             }
         }
     }
